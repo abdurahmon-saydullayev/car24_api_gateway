@@ -376,6 +376,51 @@ paths:
       summary: Get Client List
       tags:
       - Client
+    post:
+      consumes:
+      - application/json
+      description: Create Client
+      operationId: create_client
+      parameters:
+      - description: CreateClient
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/client_service.CreateClient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetClientBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/client_service.Client'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Client
+      tags:
+      - Client
   /client/{id}:
     delete:
       consumes:
@@ -851,50 +896,4 @@ paths:
       summary: Update Order
       tags:
       - Order
-  /user:
-    post:
-      consumes:
-      - application/json
-      description: Create User
-      operationId: create_user
-      parameters:
-      - description: CreateClient
-        in: body
-        name: profile
-        required: true
-        schema:
-          $ref: '#/definitions/client_service.CreateClient'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: GetUserBody
-          schema:
-            allOf:
-            - $ref: '#/definitions/http.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/client_service.Client'
-              type: object
-        "400":
-          description: Invalid Argument
-          schema:
-            allOf:
-            - $ref: '#/definitions/http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server Error
-          schema:
-            allOf:
-            - $ref: '#/definitions/http.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Create User
-      tags:
-      - User
 swagger: "2.0"

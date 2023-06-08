@@ -60,10 +60,10 @@ func Load() Config {
 	config.Version = cast.ToString(getOrReturnDefaultValue("VERSION", "1.0"))
 
 	config.UserServiceHost = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
-	config.UserServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9091"))
+	config.UserServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9092"))
 
 	config.OrderServiceHost = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_HOST", "localhost"))
-	config.OrderServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9092"))
+	config.OrderServicePort = cast.ToString(getOrReturnDefaultValue("ORDER_SERVICE_PORT", ":9091"))
 
 	config.SecretKey = "hello"
 

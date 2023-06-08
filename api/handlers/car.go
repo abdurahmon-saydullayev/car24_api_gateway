@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"Projects/Car24/car24_api_gateway/api/http"
-	"Projects/Car24/car24_api_gateway/genproto/client_service"
+	"Projects/Car24/car24_api_gateway/genproto/order_service"
 	"Projects/Car24/car24_api_gateway/models"
 	"Projects/Car24/car24_api_gateway/pkg/helper"
 	"Projects/Car24/car24_api_gateway/pkg/util"
@@ -11,30 +11,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// CreateClient godoc
-// @ID create_client
-// @Router /client [POST]
-// @Summary Create Client
-// @Description  Create Client
-// @Tags Client
+// CreateCar godoc
+// @ID create_car
+// @Router /car [POST]
+// @Summary Create Car
+// @Description  Create Car
+// @Tags Car
 // @Accept json
 // @Produce json
-// @Param profile body client_service.CreateClient true "CreateClient"
-// @Success 200 {object} http.Response{data=client_service.Client} "GetClientBody"
+// @Param profile body order_service.CreateCar true "CreateCar"
+// @Success 200 {object} http.Response{data=order_service.Car} "GetCarBody"
 // @Response 400 {object} http.Response{data=string} "Invalid Argument"
 // @Failure 500 {object} http.Response{data=string} "Server Error"
-func (h *Handler) CreateClient(c *gin.Context) {
-	var user client_service.CreateClient
+func (h *Handler) CreateCar(c *gin.Context) {
+	var car order_service.CreateCar
 
-	err := c.ShouldBindJSON(&user)
+	err := c.ShouldBindJSON(&car)
 	if err != nil {
 		h.handleResponse(c, http.BadRequest, err.Error())
 		return
 	}
 
-	resp, err := h.services.UserService().Create(
+	resp, err := h.services.CarService().Create(
 		c.Request.Context(),
-		&user,
+		&car,
 	)
 	if err != nil {
 		h.handleResponse(c, http.GRPCError, err.Error())
@@ -44,30 +44,30 @@ func (h *Handler) CreateClient(c *gin.Context) {
 	h.handleResponse(c, http.Created, resp)
 }
 
-// GetClientByID godoc
-// @ID get_client_by_id
-// @Router /client/{id} [GET]
-// @Summary Get Client By ID
-// @Description Get Client By ID
-// @Tags Client
+// GetCarByID godoc
+// @ID get_car_by_id
+// @Router /car/{id} [GET]
+// @Summary Get Car By ID
+// @Description Get Car By ID
+// @Tags Car
 // @Accept json
 // @Produce json
 // @Param id path string true "id"
-// @Success 200 {object} http.Response{data=client_service.Client} "Client"
+// @Success 200 {object} http.Response{data=order_service.Car} "Car"
 // @Response 400 {object} http.Response{data=string} "Invalid Argument"
 // @Failure 500 {object} http.Response{data=string} "Server Error"
-func (h *Handler) GetClientByID(c *gin.Context) {
-	userId := c.Param("id")
+func (h *Handler) GetCarByID(c *gin.Context) {
+	carId := c.Param("id")
 
-	if !util.IsValidUUID(userId) {
-		h.handleResponse(c, http.InvalidArgument, "user id is an invalid uuid")
+	if !util.IsValidUUID(carId) {
+		h.handleResponse(c, http.InvalidArgument, "car id is an invalid uuid")
 		return
 	}
 
-	resp, err := h.services.UserService().GetByID(
+	resp, err := h.services.CarService().GetByID(
 		context.Background(),
-		&client_service.CLientPrimaryKey{
-			Id: userId,
+		&order_service.CarPrimaryKey{
+			Id: carId,
 		},
 	)
 	if err != nil {
@@ -78,21 +78,21 @@ func (h *Handler) GetClientByID(c *gin.Context) {
 	h.handleResponse(c, http.OK, resp)
 }
 
-// GetClientList godoc
-// @ID get_client_list
-// @Router /client [GET]
-// @Summary Get Client List
-// @Description Get Client List
-// @Tags Client
+// GetCarList godoc
+// @ID get_car_list
+// @Router /car [GET]
+// @Summary Get Car List
+// @Description Get Car List
+// @Tags Car
 // @Accept json
 // @Produce json
 // @Param offset query integer false "offset"
 // @Param limit query integer false "limit"
 // @Param search query string false "search"
-// @Success 200 {object} http.Response{data=client_service.GetListClientResponse} "GetAllClientResponseBody"
+// @Success 200 {object} http.Response{data=order_service.GetListCarResponse} "GetAllCarResponseBody"
 // @Response 400 {object} http.Response{data=string} "Invalid Argument"
 // @Failure 500 {object} http.Response{data=string} "Server Error"
-func (h *Handler) GetClientList(c *gin.Context) {
+func (h *Handler) GetCarList(c *gin.Context) {
 
 	offset, err := h.getOffsetParam(c)
 	if err != nil {
@@ -106,9 +106,9 @@ func (h *Handler) GetClientList(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.services.UserService().GetList(
+	resp, err := h.services.CarService().GetList(
 		context.Background(),
-		&client_service.GetListClientRequest{
+		&order_service.GetListCarRequest{
 			Limit:  int64(limit),
 			Offset: int64(offset),
 			Search: c.Query("search"),
@@ -123,38 +123,38 @@ func (h *Handler) GetClientList(c *gin.Context) {
 	h.handleResponse(c, http.OK, resp)
 }
 
-// @ID update_client
-// @Router /client/{id} [PUT]
-// @Summary Update Client
-// @Description Update Client
-// @Tags Client
+// @ID update_car
+// @Router /car/{id} [PUT]
+// @Summary Update Car
+// @Description Update Car
+// @Tags Car
 // @Accept json
 // @Produce json
 // @Param id path string true "id"
-// @Param profile body client_service.UpdateClient true "UpdateClientRequestBody"
-// @Success 200 {object} http.Response{data=client_service.Client} "Client data"
+// @Param profile body client_service.UpdateCar true "UpdateCarRequestBody"
+// @Success 200 {object} http.Response{data=order_service.Car} "Car data"
 // @Response 400 {object} http.Response{data=string} "Bad Request"
 // @Failure 500 {object} http.Response{data=string} "Server Error"
-func (h *Handler) UpdateClient(c *gin.Context) {
+func (h *Handler) UpdateCar(c *gin.Context) {
 
-	var user client_service.UpdateClient
+	var car order_service.UpdateCar
 
-	user.Id = c.Param("id")
+	car.Id = c.Param("id")
 
-	if !util.IsValidUUID(user.Id) {
-		h.handleResponse(c, http.InvalidArgument, "user id is an invalid uuid")
+	if !util.IsValidUUID(car.Id) {
+		h.handleResponse(c, http.InvalidArgument, "car id is an invalid uuid")
 		return
 	}
 
-	err := c.ShouldBindJSON(&user)
+	err := c.ShouldBindJSON(&car)
 	if err != nil {
 		h.handleResponse(c, http.BadRequest, err.Error())
 		return
 	}
 
-	resp, err := h.services.UserService().Update(
+	resp, err := h.services.CarService().Update(
 		c.Request.Context(),
-		&user,
+		&car,
 	)
 
 	if err != nil {
@@ -165,46 +165,46 @@ func (h *Handler) UpdateClient(c *gin.Context) {
 	h.handleResponse(c, http.OK, resp)
 }
 
-// PatchUser godoc
-// @ID patch_client
-// @Router /client/{id} [PATCH]
-// @Summary Patch Client
-// @Description Patch Client
-// @Tags Client
+// PatchCar godoc
+// @ID patch_car
+// @Router /car/{id} [PATCH]
+// @Summary Patch Car
+// @Description Patch Car
+// @Tags Car
 // @Accept json
 // @Produce json
 // @Param id path string true "id"
 // @Param profile body models.UpdatePatch true "UpdatePatchRequestBody"
-// @Success 200 {object} http.Response{data=client_service.Client} "Client data"
+// @Success 200 {object} http.Response{data=order_service.Car} "Car data"
 // @Response 400 {object} http.Response{data=string} "Bad Request"
 // @Failure 500 {object} http.Response{data=string} "Server Error"
-func (h *Handler) UpdatePatchClient(c *gin.Context) {
+func (h *Handler) UpdatePatchCar(c *gin.Context) {
 
-	var updatePatchUser models.UpdatePatch
+	var updatePatchCar models.UpdatePatch
 
-	err := c.ShouldBindJSON(&updatePatchUser)
+	err := c.ShouldBindJSON(&updatePatchCar)
 	if err != nil {
 		h.handleResponse(c, http.BadRequest, err.Error())
 		return
 	}
 
-	updatePatchUser.ID = c.Param("id")
+	updatePatchCar.ID = c.Param("id")
 
-	if !util.IsValidUUID(updatePatchUser.ID) {
-		h.handleResponse(c, http.InvalidArgument, "user id is an invalid uuid")
+	if !util.IsValidUUID(updatePatchCar.ID) {
+		h.handleResponse(c, http.InvalidArgument, "car id is an invalid uuid")
 		return
 	}
 
-	structData, err := helper.ConvertMapToStruct(updatePatchUser.Data)
+	structData, err := helper.ConvertMapToStruct(updatePatchCar.Data)
 	if err != nil {
 		h.handleResponse(c, http.InvalidArgument, err.Error())
 		return
 	}
 
-	resp, err := h.services.UserService().UpdatePatch(
+	resp, err := h.services.CarService().UpdatePatch(
 		c.Request.Context(),
-		&client_service.UpdatePatchClient{
-			Id:     updatePatchUser.ID,
+		&order_service.UpdatePathCar{
+			Id:     updatePatchCar.ID,
 			Fields: structData,
 		},
 	)
@@ -217,30 +217,30 @@ func (h *Handler) UpdatePatchClient(c *gin.Context) {
 	h.handleResponse(c, http.OK, resp)
 }
 
-// DeleteClient godoc
-// @ID delete_client
-// @Router /client/{id} [DELETE]
-// @Summary Delete Client
-// @Description Delete Client
-// @Tags Client
+// DeleteCar godoc
+// @ID delete_car
+// @Router /car/{id} [DELETE]
+// @Summary Delete Car
+// @Description Delete Car
+// @Tags Car
 // @Accept json
 // @Produce json
 // @Param id path string true "id"
-// @Success 200 {object} http.Response{data=object{}} "Client data"
+// @Success 200 {object} http.Response{data=object{}} "Car data"
 // @Response 400 {object} http.Response{data=string} "Bad Request"
 // @Failure 500 {object} http.Response{data=string} "Server Error"
-func (h *Handler) DeleteClient(c *gin.Context) {
+func (h *Handler) DeleteCar(c *gin.Context) {
 
-	userId := c.Param("id")
+	carId := c.Param("id")
 
-	if !util.IsValidUUID(userId) {
-		h.handleResponse(c, http.InvalidArgument, "user id is an invalid uuid")
+	if !util.IsValidUUID(carId) {
+		h.handleResponse(c, http.InvalidArgument, "car id is an invalid uuid")
 		return
 	}
 
-	resp, err := h.services.UserService().Delete(
+	resp, err := h.services.CarService().Delete(
 		c.Request.Context(),
-		&client_service.CLientPrimaryKey{Id: userId},
+		&order_service.CarPrimaryKey{Id: carId},
 	)
 
 	if err != nil {

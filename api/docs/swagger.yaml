@@ -126,6 +126,57 @@ definitions:
       id:
         type: string
     type: object
+  order_service.Car:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      model_id:
+        type: string
+      state_number:
+        type: string
+      status:
+        type: boolean
+      tarif_id:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  order_service.CreateCar:
+    properties:
+      model_id:
+        type: string
+      state_number:
+        type: string
+      tarif_id:
+        type: string
+    type: object
+  order_service.CreateDiscount:
+    properties:
+      discount_amount:
+        type: number
+      discount_type:
+        type: string
+      name:
+        type: string
+    type: object
+  order_service.CreateMechanic:
+    properties:
+      fullname:
+        type: string
+      phone_number:
+        type: string
+      photo:
+        type: string
+      price_per_hour:
+        type: string
+    type: object
+  order_service.CreateModel:
+    properties:
+      name:
+        type: string
+    type: object
   order_service.CreateOrder:
     properties:
       car_id:
@@ -153,6 +204,39 @@ definitions:
       total_price:
         type: number
     type: object
+  order_service.CreateTarif:
+    properties:
+      model_id:
+        type: string
+      name:
+        type: string
+      price_per_day:
+        type: string
+    type: object
+  order_service.Discount:
+    properties:
+      create_at:
+        type: string
+      discount_amount:
+        type: number
+      discount_type:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      update_at:
+        type: string
+    type: object
+  order_service.GetListCarResponse:
+    properties:
+      cars:
+        items:
+          $ref: '#/definitions/order_service.Car'
+        type: array
+      count:
+        type: integer
+    type: object
   order_service.GetListOrderResponse:
     properties:
       count:
@@ -161,6 +245,32 @@ definitions:
         items:
           $ref: '#/definitions/order_service.Order'
         type: array
+    type: object
+  order_service.Mechanic:
+    properties:
+      fullname:
+        type: string
+      id:
+        type: string
+      phone_number:
+        type: string
+      photo:
+        type: string
+      price_per_hour:
+        type: string
+      status:
+        type: boolean
+    type: object
+  order_service.Model:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      updated_at:
+        type: string
     type: object
   order_service.Order:
     properties:
@@ -197,6 +307,30 @@ definitions:
       updated_at:
         type: string
     type: object
+  order_service.Tarif:
+    properties:
+      id:
+        type: string
+      model_id:
+        type: string
+      name:
+        type: string
+      price_per_day:
+        type: string
+    type: object
+  order_service.UpdateCar:
+    properties:
+      id:
+        type: string
+      model_id:
+        type: string
+      state_number:
+        type: string
+      status:
+        type: boolean
+      tarif_id:
+        type: string
+    type: object
   order_service.UpdateOrder:
     properties:
       car_id:
@@ -229,6 +363,292 @@ definitions:
 info:
   contact: {}
 paths:
+  /car:
+    get:
+      consumes:
+      - application/json
+      description: Get Car List
+      operationId: get_car_list
+      parameters:
+      - description: offset
+        in: query
+        name: offset
+        type: integer
+      - description: limit
+        in: query
+        name: limit
+        type: integer
+      - description: search
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetAllCarResponseBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.GetListCarResponse'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Car List
+      tags:
+      - Car
+    post:
+      consumes:
+      - application/json
+      description: Create Car
+      operationId: create_car
+      parameters:
+      - description: CreateCar
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/order_service.CreateCar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetCarBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Car'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Car
+      tags:
+      - Car
+  /car/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Car
+      operationId: delete_car
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Car data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete Car
+      tags:
+      - Car
+    get:
+      consumes:
+      - application/json
+      description: Get Car By ID
+      operationId: get_car_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Car
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Car'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Car By ID
+      tags:
+      - Car
+    patch:
+      consumes:
+      - application/json
+      description: Patch Car
+      operationId: patch_car
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: UpdatePatchRequestBody
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdatePatch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Car data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Car'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Patch Car
+      tags:
+      - Car
+    put:
+      consumes:
+      - application/json
+      description: Update Car
+      operationId: update_car
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: UpdateCarRequestBody
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/order_service.UpdateCar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Car data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Car'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Update Car
+      tags:
+      - Car
   /check:
     get:
       consumes:
@@ -610,6 +1030,367 @@ paths:
       summary: Update Client
       tags:
       - Client
+  /discount:
+    post:
+      consumes:
+      - application/json
+      description: Create Discount
+      operationId: create_car
+      parameters:
+      - description: CreateDiscount
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/order_service.CreateDiscount'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetDiscountBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Discount'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Discount
+      tags:
+      - Discount
+  /discount/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Mechanic
+      operationId: delete_discount
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Mechanic data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete Mechanic
+      tags:
+      - Mechanic
+    get:
+      consumes:
+      - application/json
+      description: Get Discount By ID
+      operationId: get_discount_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Discount
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Discount'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Discount By ID
+      tags:
+      - Discount
+  /mechanic:
+    post:
+      consumes:
+      - application/json
+      description: Create Mechanic
+      operationId: create_mechanic
+      parameters:
+      - description: CreateMechanic
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/order_service.CreateMechanic'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetMechanicBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Mechanic'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Mechanic
+      tags:
+      - Mechanic
+  /mechanic/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get Mechanic By ID
+      operationId: get_mechanic_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Mechanic
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Mechanic'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Mechanic By ID
+      tags:
+      - Mechanic
+  /model:
+    post:
+      consumes:
+      - application/json
+      description: Create Model
+      operationId: create_model
+      parameters:
+      - description: CreateModel
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/order_service.CreateModel'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetModelBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Model'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Model
+      tags:
+      - Model
+  /model/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Model
+      operationId: delete_model
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Model data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete Model
+      tags:
+      - Model
+    get:
+      consumes:
+      - application/json
+      description: Get Model By ID
+      operationId: get_model_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Model
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Model'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Model By ID
+      tags:
+      - Model
   /order:
     get:
       consumes:
@@ -896,4 +1677,139 @@ paths:
       summary: Update Order
       tags:
       - Order
+  /tarif:
+    post:
+      consumes:
+      - application/json
+      description: Create Tarif
+      operationId: create_tarif
+      parameters:
+      - description: CreateTarif
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/order_service.CreateTarif'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: GetTarifBody
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Tarif'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Tarif
+      tags:
+      - Tarif
+  /tarif/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Tarif
+      operationId: delete_tarif
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tarif data
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Delete Tarif
+      tags:
+      - Tarif
+    get:
+      consumes:
+      - application/json
+      description: Get Model By ID
+      operationId: get_tarif_by_id
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tarif
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/order_service.Tarif'
+              type: object
+        "400":
+          description: Invalid Argument
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server Error
+          schema:
+            allOf:
+            - $ref: '#/definitions/http.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Get Model By ID
+      tags:
+      - Tarif
 swagger: "2.0"

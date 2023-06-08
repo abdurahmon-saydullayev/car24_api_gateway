@@ -131,7 +131,7 @@ func (h *Handler) GetCarList(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "id"
-// @Param profile body client_service.UpdateCar true "UpdateCarRequestBody"
+// @Param profile body order_service.UpdateCar true "UpdateCarRequestBody"
 // @Success 200 {object} http.Response{data=order_service.Car} "Car data"
 // @Response 400 {object} http.Response{data=string} "Bad Request"
 // @Failure 500 {object} http.Response{data=string} "Server Error"

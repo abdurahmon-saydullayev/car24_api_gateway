@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package order_service;
+option go_package = "genproto/order_service";
+
+message Model{
+    string id = 1;
+    string name = 2;
+    string created_at = 3;
+    string updated_at = 4;
+}
+
+message CreateModel {
+    string name = 1;
+}
+
+message ModelPK{
+    string id = 1;
+}

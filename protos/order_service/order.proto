@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package order_service;
+
+option go_package = "genproto/order_service";
+import "google/protobuf/struct.proto";
+
+message Order{
+    string id =1;
+    string car_id =2;
+    string client_id =3;
+    string tarif_id =4;
+    double total_price =5;
+    double paid_price =6;
+    int32 day_count =7;
+    string start_date =8;
+    string discount =9;
+    string order_number =10;
+    bool status =11;
+    int32 miliage =12;
+    string is_paid_date =13;
+    string created_at =14;
+    string updated_at =15;
+    string mechanic_id =16;
+}
+
+message CreateOrder{
+    string car_id =1;
+    string client_id =2;
+    string tarif_id =3;
+    double total_price = 4;
+    double paid_price = 5;
+    int32 day_count = 6;
+    string start_date =7;
+    string discount =8;
+    bool status =9;
+    int32 miliage =10;
+    string is_paid_date =11;
+    string mechanic_id =12;
+}
+
+message UpdateOrder{
+    string id =1;
+    string car_id =2;
+    string client_id =3;
+    string tarif_id =4;
+    double total_price =5;
+    double paid_price =6;
+    int32 day_count =7;
+    string start_date =8;
+    string discount =9;
+    bool status =10;
+    int32 miliage =11;
+    string is_paid_date =12;
+    string order_number = 13;
+}
+
+message UpdatePatchOrder {
+    string id = 1;
+    google.protobuf.Struct fields = 2;
+}
+
+message GetListOrderRequest {
+    int64 offset = 1;
+    int64 limit = 2;
+    string search = 3;
+}
+
+message GetListOrderResponse { 
+    int64 count = 1;
+    repeated Order orders = 2;
+}
+
+message OrderPrimaryKey {
+    string id = 1;
+}

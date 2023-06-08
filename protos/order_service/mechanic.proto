@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package order_service;
+
+option go_package = "genproto/order_service";
+
+message Mechanic{
+    string id = 1;
+    string fullname = 2;
+    string phone_number = 3;
+    string photo = 4;
+    string price_per_hour = 5;
+    bool status = 6;
+}
+
+message CreateMechanic{
+    string fullname = 1;
+    string phone_number = 2;
+    string photo = 3;
+    string price_per_hour = 4;
+}
+
+message UpdateMechanic{
+    string id = 1;
+    bool status = 2;
+}
+
+message MechanicPK{
+    string id = 1;
+}

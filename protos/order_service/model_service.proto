@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package order_service;
+
+option go_package = "genproto/order_service";
+import "model.proto";
+import "google/protobuf/empty.proto";
+
+service ModelService {
+    rpc Create(CreateModel) returns (Model);
+    rpc GetByID(ModelPK) returns (Model);
+    rpc Delete(ModelPK) returns (google.protobuf.Empty);
+}

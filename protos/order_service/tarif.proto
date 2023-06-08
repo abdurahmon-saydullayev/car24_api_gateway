@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package order_service;
+
+option go_package = "genproto/order_service";
+
+message Tarif{
+    string id = 1;
+    string name = 2;
+    string model_id = 3;
+    string price_per_day = 4;
+}
+
+message CreateTarif{
+    string name = 1;
+    string model_id = 2;
+    string price_per_day = 3;
+}
+
+message TarifPK{
+    string id = 1;
+}

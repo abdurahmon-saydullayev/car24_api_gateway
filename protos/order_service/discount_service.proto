@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package order_service;
+
+option go_package = "genproto/order_service";
+import "discount.proto";
+import "google/protobuf/empty.proto";
+
+service DiscountService{
+    rpc Create(CreateDiscount) returns(Discount);
+    rpc GetByID(DiscountPK) returns(Discount);
+    rpc Delete(DiscountPK) returns(google.protobuf.Empty);
+}

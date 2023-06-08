@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package order_service;
+
+option go_package = "genproto/order_service";
+import "google/protobuf/struct.proto";
+
+message Car{
+    string id = 1;
+    string state_number = 2;
+    string tarif_id = 3;
+    string model_id = 4;
+    bool status = 5;
+    string created_at = 6;
+    string updated_at = 7;
+}
+ message CreateCar{
+    string state_number = 1;
+    string tarif_id = 2;
+    string model_id = 3;
+ }
+
+ message UpdateCar{
+    string id = 1;
+    string state_number = 2;
+    string tarif_id = 3;
+    string model_id = 4;
+    bool status = 5;
+ }
+
+ message UpdatePathCar{
+    string id = 1;
+    google.protobuf.Struct fields = 2;
+ }
+
+ message GetListCarRequest {
+    int64 offset = 1;
+    int64 limit = 2;
+    string search = 3;
+}
+
+message GetListCarResponse { 
+    int64 count = 1;
+    repeated Car cars = 2;
+}
+
+message CarPrimaryKey {
+    string id = 1;
+}
